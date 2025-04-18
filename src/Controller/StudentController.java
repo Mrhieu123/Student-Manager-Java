@@ -3,6 +3,9 @@ package Controller;
 import Domain.Student;
 import Seed.DataInit;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
@@ -38,4 +41,27 @@ public class StudentController {
         }
     }
 
+    public void findStudentsByName(String nameFromUser){
+        studentList.stream()
+            .filter(student -> student.getName().equalsIgnoreCase(nameFromUser))
+            .forEach(System.out::println);
+    }
+
+    public void exportFileJson(){
+            try(BufferedWriter writer = new BufferedWriter(new FileWriter("listStudent.txt"))){
+                studentList.stream()
+                        .map(Student::toString)
+                        .forEach(student -> {
+                    try{
+                        writer.write(student);
+                        writer.newLine();
+                    }catch (IOException e){
+                        throw new RuntimeException(e);
+                    }
+                });
+                System.out.println("dữ liệu đã được ghi vào file 'listStudent.txt' ");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
 }
